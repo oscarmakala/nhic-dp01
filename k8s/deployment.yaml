@@ -1,0 +1,57 @@
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: data-product
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: data-product
+          template:
+            metadata:
+              labels:
+                app: data-product
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/path: "/metrics"
+                prometheus.io/port: "8000"
+            spec:
+              containers:
+              - name: data-product
+                image: registry/domain/product:latest
+                ports:
+                - containerPort: 8000
+                resources:
+                  requests:
+                    memory: "256Mi"
+                    cpu: "100m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "200m"
+                readinessProbe:
+                  httpGet:
+                    path: /health
+                    port: 8000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                livenessProbe:
+                  httpGet:
+                    path: /health
+                    port: 8000
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                env:
+                - name: PORT
+                  value: "8000"
+        ---
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: data-product
+        spec:
+          selector:
+            app: data-product
+          ports:
+          - port: 80
+            targetPort: 8000
+          type: ClusterIP

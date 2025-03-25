@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../../base
+namespace: production
+commonLabels:
+  env: production
+images:
+- name: registry/replit-app
+  newName: your-registry.com/replit-app
+  newTag: latest
+resources:
+- ingress.yaml
+- hpa.yaml
+patchesStrategicMerge:
+- resource-patch.yaml

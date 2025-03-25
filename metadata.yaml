@@ -1,0 +1,35 @@
+apiVersion: datamesh.org/v1alpha1
+kind: DataProduct
+metadata:
+  name: example-data-product
+  domain: domain-name  # Replace with your domain name (finance, marketing, etc.)
+  description: "Description of your data product"
+  version: 0.1.0
+  tags:
+    - tag1
+    - tag2
+spec:
+  owner:
+    team: your-team
+    email: team@example.com
+  inputs:
+    - name: input-source-name
+      source: source-domain/source-dataset
+      description: "Description of input data"
+      schema: "https://schema-registry/schemas/input-schema"
+  outputs:
+    - name: output-name
+      description: "Description of output data"
+      schema: "https://schema-registry/schemas/output-schema"
+      endpoint: "/api/{domain}/{product-name}"
+      format: "json"
+  sla:
+    freshness: 24h  # How often the data is updated
+    availability: 99.9%  # SLA target
+  documentation:
+    usage: "https://docs.example.com/data-products/{domain}/{product-name}"
+    codeRepository: "https://github.com/oscarmakala/{domain}-{product-name}"
+  lineage:
+    upstream:
+      - source-domain/source-dataset
+    downstream: []
