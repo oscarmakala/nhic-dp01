@@ -1,42 +1,65 @@
+
 import pytest
 import pandas as pd
+from decimal import Decimal
+from datetime import datetime
 from src.processors.data_processor import DataProcessor
 
+@pytest.fixture
+def sample_data():
+    """Create sample test data."""
+    transactions = [
+        {
+            "transaction_id": "T1",
+            "product_id": "P1",
+            "quantity": 10,
+            "sale_price": Decimal("100.00"),
+            "transaction_date": datetime.now()
+        }
+    ]
+    
+    products = [
+        {
+            "product_id": "P1",
+            "category": "Electronics",
+            "cost_price": Decimal("80.00"),
+            "name": "Test Product"
+        }
+    ]
+    
+    return {"transactions": transactions, "products": products}
 
-def test_completeness():
-    """Test that data has no missing values."""
+def test_input_validation(sample_data):
+    """Test input data validation."""
     processor = DataProcessor()
-    result = processor.process({})
+    assert processor.validate_input_data(
+        sample_data['transactions'], 
+        sample_data['products']
+    ), "Valid data should pass validation"
 
-    # Convert to DataFrame for easier testing
-    df = pd.DataFrame(result['records'])
-
-    # Check for missing values
-    assert df.isnull().sum().sum() == 0, "Data should not have missing values"
-
-
-def test_value_ranges():
-    """Test that values are within expected ranges."""
+def test_negative_values(sample_data):
+    """Test handling of negative values."""
     processor = DataProcessor()
-    result = processor.process({})
+    sample_data['transactions'][0]['quantity'] = -1
+    
+    with pytest.raises(ValueError):
+        processor.process(sample_data)
 
-    # Convert to DataFrame for easier testing
-    df = pd.DataFrame(result['records'])
-
-    # Check value ranges
-    assert df['value'].min() >= 10, "Values should be at least 10"
-    assert df['value'].max() < 20, "Values should be less than 20"
-
-
-def test_category_values():
-    """Test that categories are valid."""
+def test_margin_calculation(sample_data):
+    """Test profit margin calculations."""
     processor = DataProcessor()
-    result = processor.process({})
+    result = processor.process(sample_data)
+    
+    assert 'daily_margins' in result
+    assert 'monthly_margins' in result
+    
+    daily_margin = result['daily_margins'][0]
+    assert daily_margin['profit_margin'] == 20  # (100-80)/100 * 100
 
-    # Convert to DataFrame for easier testing
-    df = pd.DataFrame(result['records'])
-
-    # Check categories
-    valid_categories = {'A', 'B', 'C'}
-    assert set(df['category'].unique()).issubset(
-        valid_categories), "Categories should be valid"
+def test_missing_data(sample_data):
+    """Test handling of missing data."""
+    processor = DataProcessor()
+    del sample_data['transactions'][0]['product_id']
+    
+    with pytest.raises(ValueError):
+        processor.process(sample_data)
