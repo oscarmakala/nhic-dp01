@@ -4,9 +4,10 @@ WORKDIR /app
 
 # Install dependencies
 COPY pyproject.toml /app/
-RUN pip install poetry==1.4.2 && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-dev --no-interaction --no-ansi
+
+RUN pip install --no-cache-dir pip-tools && \
+    python -c "import tomli; import json; f=open('pyproject.toml', 'rb'); p=tomli.load(f); deps = p['project']['dependencies']; print('\n'.join(deps))" > requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . /app/
