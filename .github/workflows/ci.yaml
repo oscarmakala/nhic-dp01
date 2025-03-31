@@ -3,7 +3,10 @@ name: Data Product CI/CD
 on:
   push:
     branches: [ main ]
-
+# Add these permissions to allow GitHub Actions to push
+permissions:
+  contents: write
+  
 jobs:
   test:
     runs-on: ubuntu-latest
