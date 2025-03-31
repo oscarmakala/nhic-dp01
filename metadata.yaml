@@ -1,17 +1,17 @@
 apiVersion: datamesh.org/v1alpha1
 kind: DataProduct
 metadata:
-  name: example-data-product
-  domain: domain-name  # Replace with your domain name (finance, marketing, etc.)
-  description: "Description of your data product"
+  name: dpo01
+  domain: nhic-dpo01
+  description: "Data product demo 01"
   version: 0.1.0
   tags:
     - tag1
     - tag2
 spec:
   owner:
-    team: your-team
-    email: team@example.com
+    team: platformteam
+    email: omakala@sandtech.com
   inputs:
     - name: input-source-name
       source: source-domain/source-dataset
@@ -21,14 +21,14 @@ spec:
     - name: output-name
       description: "Description of output data"
       schema: "https://schema-registry/schemas/output-schema"
-      endpoint: "/api/{domain}/{product-name}"
+      endpoint: "/api/nhic/dpo01"
       format: "json"
   sla:
     freshness: 24h  # How often the data is updated
     availability: 99.9%  # SLA target
   documentation:
-    usage: "https://docs.example.com/data-products/{domain}/{product-name}"
-    codeRepository: "https://github.com/oscarmakala/{domain}-{product-name}"
+    usage: "https://docs.example.com/data-products/nhic/dpo01"
+    codeRepository: "https://github.com/oscarmakala/nhic-dpo01"
   lineage:
     upstream:
       - source-domain/source-dataset
