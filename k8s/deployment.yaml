@@ -18,7 +18,7 @@
             spec:
               containers:
               - name: dp01
-                image: registry/domain/product:latest
+                image: ghcr.io/oscarmakala/nhic-dpo01/dpo01:a80a3cf860071a30e70efe4c4600e2499f85a373
                 ports:
                 - containerPort: 8000
                 resources:
