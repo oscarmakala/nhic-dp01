@@ -28,7 +28,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.REGISTRY_URL }}/${{ steps.metadata.outputs.domain }}/${{ steps.metadata.outputs.name }}:latest
+          tags: ${{ secrets.REGISTRY_URL }}/oscarmakala/${{ steps.metadata.outputs.domain }}/${{ steps.metadata.outputs.name }}:latest
 
 #      - name: Update Kubernetes manifests
 #        run: |
