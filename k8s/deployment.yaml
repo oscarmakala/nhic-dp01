@@ -1,23 +1,23 @@
         apiVersion: apps/v1
         kind: Deployment
         metadata:
-          name: data-product
+          name: dp01
         spec:
           replicas: 1
           selector:
             matchLabels:
-              app: data-product
+              app: dp01
           template:
             metadata:
               labels:
-                app: data-product
+                app: dp01
               annotations:
                 prometheus.io/scrape: "true"
                 prometheus.io/path: "/metrics"
                 prometheus.io/port: "8000"
             spec:
               containers:
-              - name: data-product
+              - name: dp01
                 image: registry/domain/product:latest
                 ports:
                 - containerPort: 8000
@@ -47,10 +47,10 @@
         apiVersion: v1
         kind: Service
         metadata:
-          name: data-product
+          name: dp01
         spec:
           selector:
-            app: data-product
+            app: dp01
           ports:
           - port: 80
             targetPort: 8000
